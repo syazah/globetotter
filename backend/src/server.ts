@@ -1,0 +1,36 @@
+import express from "express";
+import dotenv from "dotenv";
+dotenv.config();
+import cors from "cors";
+import mongoose from "mongoose";
+import router from "./routes";
+const port = process.env.PORT || 3000;
+
+//APP INITIALIZATION
+const app = express();
+
+//MIDDLEWARES
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+//ROUTES
+app.use("/api", router);
+
+//SERVER INITIALIZATION
+const server = () => {
+  const dbURL = process.env.MONGODB_URL || "";
+  mongoose
+    .connect(dbURL)
+    .then(() => {
+      console.log("Connected to MongoDB");
+      app.listen(port, () => {
+        console.log(`Server is running on port ${port}`);
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+server();

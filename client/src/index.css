@@ -1,0 +1,70 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: "Halyard Display";
+  src: url("./assets/fonts/fonnts.com-Halyard_Display_Regular.otf")
+    format("opentype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Halyard Display";
+  src: url("./assets/fonts/fonnts.com-Halyard_Display_Light.otf")
+    format("opentype");
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Halyard Display";
+  src: url("./assets/fonts/fonnts.com-Halyard_Display_Medium.otf")
+    format("opentype");
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Halyard Display";
+  src: url("./assets/fonts/fonnts.com-Halyard_Display_SemiBold.otf")
+    format("opentype");
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Halyard Display";
+  src: url("./assets/fonts/fonnts.com-Halyard_Display_Bold.otf")
+    format("opentype");
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Halyard Display";
+  src: url("./assets/fonts/fonnts.com-Halyard_Display_Black.otf")
+    format("opentype");
+  font-weight: 900;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Halyard Display";
+  src: url("./assets/fonts/fonnts.com-Halyard_Display_Italic.otf")
+    format("opentype");
+  font-weight: 400;
+  font-style: italic;
+}
+
+@theme {
+  --color-primary: #8000ff;
+  --color-secondary: #cf9fff;
+  --color-background: #eee;
+  --color-dark: #333;
+
+  --font-family: "Halyard Display", sans-serif;
+}
+
+*{
+  font-family: var(--font-family);
+}
