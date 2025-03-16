@@ -5,7 +5,25 @@ import cors from "cors";
 import mongoose from "mongoose";
 import router from "./routes";
 const port = process.env.PORT || 3000;
+import "module-alias/register";
+import { addAliases } from "module-alias";
 
+//ALIASES
+addAliases({
+  "@routes": __dirname + "/routes",
+  "@controllers": __dirname + "/controllers",
+  "@interfaces": __dirname + "/interfaces",
+  "@middlewares": __dirname + "/middlewares",
+  "@schemas": __dirname + "/schemas",
+  "@db": __dirname + "/db",
+  "@errors": __dirname + "/errors",
+  "@hashmaps": __dirname + "/hashmaps",
+  "@helpers": __dirname + "/helpers",
+  "@managers": __dirname + "/managers",
+  "@services": __dirname + "/services",
+  "@utils": __dirname + "/utils",
+  "@validations": __dirname + "/validations",
+});
 //APP INITIALIZATION
 const app = express();
 

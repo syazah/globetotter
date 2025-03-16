@@ -4,8 +4,9 @@
   "main": "index.js",
   "scripts": {
     "test": "",
-    "start": "nodemon --exec ts-node -r tsconfig-paths/register src/server.ts",
-    "dev": "nodemon --exec ts-node -r tsconfig-paths/register src/server.ts"
+    "start": "node -r module-alias/register dist/server.js",
+    "dev": "nodemon --exec ts-node -r tsconfig-paths/register src/server.ts",
+    "build": "tsc -p ."
   },
   "keywords": [],
   "author": "",
@@ -22,10 +23,27 @@
     "express-async-errors": "^3.1.1",
     "http-status-codes": "^2.3.0",
     "jsonwebtoken": "^9.0.2",
+    "module-alias": "^2.2.3",
     "mongodb": "^6.14.2",
     "mongoose": "^8.12.1",
+    "rimraf": "^6.0.1",
     "ts-node": "^10.9.2",
     "ws": "^8.18.1"
+  },
+  "_moduleAliases": {
+    "@routes": "dist/routes",
+    "@controllers": "dist/controllers",
+    "@interfaces": "dist/interfaces",
+    "@middlewares": "dist/middlewares",
+    "@schemas": "dist/schemas",
+    "@db": "dist/db",
+    "@errors": "dist/errors",
+    "@hashmaps": "dist/hashmaps",
+    "@helpers": "dist/helpers",
+    "@managers": "dist/managers",
+    "@services": "dist/services",
+    "@utils": "dist/utils",
+    "@validations": "dist/validations"
   },
   "devDependencies": {
     "nodemon": "^3.1.9",
