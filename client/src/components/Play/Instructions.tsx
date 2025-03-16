@@ -4,7 +4,7 @@ function Instructions({
   setPlayGame: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   return (
-    <div className="bg-white rounded-lg shadow-lg p-8 max-w-3xl mx-auto max-h-[500px] overflow-y-scroll my-8 border border-gray-200">
+    <div className="bg-white rounded-lg shadow-lg p-8 max-w-xl md:max-w-3xl mx-auto max-h-[500px] overflow-y-scroll my-8 border border-gray-200">
       <div className="flex items-center justify-center mb-6">
         <span className="text-4xl mr-3">🧩</span>
         <h1 className="text-3xl font-bold text-primary">How To Play</h1>

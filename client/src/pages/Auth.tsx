@@ -3,7 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { useAuthContext } from "../context/AuthContext";
 import { useToast } from "../context/ToastContext";
 import { BiPlay } from "react-icons/bi";
-import axios, { AxiosError } from "axios";
+import axios from "../utils/axios.config";
+import { AxiosError } from "axios";
 import { TiTick } from "react-icons/ti";
 
 function Auth() {
@@ -114,7 +115,7 @@ function Auth() {
   };
 
   useEffect(() => {
-    console.log(user)
+    console.log(user);
     if (user && user.id) {
       navigate("/play");
     } else {
@@ -143,14 +144,14 @@ function Auth() {
   }
 
   return (
-    <div className="w-full h-screen flex justify-start items-center overflow-hidden">
-      <div className="w-1/2 h-screen flex flex-col justify-center items-center">
+    <div className="w-full md:h-screen flex gap-4 md:gap-0 md:flex-row flex-col justify-start items-center overflow-hidden">
+      <div className="md:w-1/2 h-screen flex flex-col justify-center items-center">
         <img src="/logo.png" className="w-12" alt="Logo" />
         <h1 className="text-4xl">Globetotter</h1>
         <p className="text-base mt-2 text-center text-zinc-600">
           The world is full of wonders. Can you guess them all?
         </p>
-        <form onSubmit={handleSubmit} className="w-1/2 flex flex-col">
+        <form onSubmit={handleSubmit} className="md:w-1/2 flex flex-col">
           <div className="relative w-full flex justify-center items-center">
             <input
               value={formData.username}
@@ -231,7 +232,7 @@ function Auth() {
           </div>
         </form>
       </div>
-      <div className="w-1/2 bg-[url('https://cdn.pixabay.com/photo/2020/06/03/15/20/balloon-5255326_1280.jpg')] bg-cover bg-right h-screen"></div>
+      <div className="w-1/2 md:flex hidden  bg-[url('https://cdn.pixabay.com/photo/2020/06/03/15/20/balloon-5255326_1280.jpg')] bg-cover bg-right h-screen"></div>
     </div>
   );
 }

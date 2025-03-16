@@ -4,7 +4,7 @@ import { FaWhatsapp, FaUser, FaLock, FaTimes, FaSpinner } from "react-icons/fa";
 import { useAuthContext } from "../../context/AuthContext";
 import { useToast } from "../../context/ToastContext";
 import html2canvas from "html2canvas";
-import axios from "axios";
+import axios from "../../utils/axios.config";
 
 // Types for form state
 interface FormData {
@@ -50,7 +50,7 @@ const InviteModal: React.FC<InviteModalProps> = ({
   const [friendsToken, setFriendsToken] = useState<string | null>(null);
 
   // Auth context for user operations - using registerUser from AuthContext
-  const { registerFriend } = useAuthContext();
+  const { registerFriend, user: invitingUser } = useAuthContext();
 
   // Toast context for notifications
   const { showToast } = useToast();
@@ -222,16 +222,12 @@ const InviteModal: React.FC<InviteModalProps> = ({
     const frontendURL = import.meta.env.VITE_FRONTEND_URL;
     if (!shareImage) return;
 
-    const text = `${formData.username} has challenged you to beat their score of ${score} points in Globetotter! Can you guess the destinations better?`;
+    const text = `🌍 *Globetotter Challenge!* 🌍\n\n${invitingUser?.username}, has challenged you to beat their score of ${score} points in Globetotter! Can you guess the destinations better?\n\n Your username: ${formData?.username} and Your Password: ${formData?.password} \n \nPlay now: ${frontendURL}/welcome/${friendsToken}`;
 
     try {
-      // Create a temporary link to share the image
-      const shareUrl = `https://wa.me/?text=${encodeURIComponent(
-        text + `Check out the game at ${frontendURL}/welcome/${friendsToken}`
-      )}`;
+      const shareUrl = `https://wa.me/?text=${encodeURIComponent(text)}`;
       window.open(shareUrl, "_blank");
 
-      // Show success toast notification
       showToast("Challenge shared successfully!", "success");
     } catch (error) {
       console.error("Error sharing to WhatsApp:", error);

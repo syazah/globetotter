@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useAuthContext } from "../context/AuthContext";
-import axios from "axios";
+import axios from "../utils/axios.config";
 import Loading from "./Loading";
 
 function Welcome() {

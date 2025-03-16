@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import axios from "../../utils/axios.config";
 import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 import confetti from "canvas-confetti";
 

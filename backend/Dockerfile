@@ -24,7 +24,4 @@ COPY --from=builder /build/node_modules/ ./node_modules/
 COPY --from=builder /build/dist/ ./dist/
 COPY --from=builder /build/tsconfig.json ./
 
-# Copy .env file if needed
-COPY .env ./
-
 CMD ["npm", "start"]

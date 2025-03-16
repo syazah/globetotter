@@ -38,6 +38,23 @@ app.get("/", (req, res) => {
 });
 app.use("/api", router);
 
+// Global error handler
+app.use(
+  (
+    err: Error,
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ) => {
+    console.error(err.stack);
+    res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+      error: process.env.NODE_ENV === "production" ? {} : err.message,
+    });
+  }
+);
+
 //SERVER INITIALIZATION
 const server = () => {
   const dbURL = process.env.MONGODB_URL || "";

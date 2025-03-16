@@ -22,8 +22,8 @@ function Home() {
               Globetotter
             </h1>
           </div>
-          <div className="w-2/3 px-6 py-10 flex flex-col justify-start items-start gap-10">
-            <h1 className="text-background text-5xl w-4/5 font-semibold">
+          <div className="md:w-2/3 px-6 py-10 flex flex-col justify-start items-start gap-10">
+            <h1 className="text-background text-2xl md:text-5xl w-full md:w-4/5 font-semibold">
               Visit the world from your home, with Globetotter
             </h1>
             <Link

@@ -40,9 +40,9 @@ function Topbar({ currentScore = 0, currentClue = "" }) {
           <img
             src="/logo.png"
             alt="logo"
-            className="w-8 h-8 brightness-0 invert object-contain"
+            className="w-6 h-6 md:w-8 md:h-8 brightness-0 invert object-contain"
           />
-          <h1 className="text-2xl text-background font-semibold ml-2">
+          <h1 className="text-xl md:text-2xl text-background font-semibold ml-2">
             Globetotter
           </h1>
         </div>
@@ -50,14 +50,14 @@ function Topbar({ currentScore = 0, currentClue = "" }) {
           <div className="flex items-center gap-2">
             <span className="text-white">Score: {user?.score || 0}</span>
             <FiRefreshCw
-              className={`text-xl text-white cursor-pointer hover:text-gray-200 transition-all ${
+              className={`text-base md:text-xl text-white cursor-pointer hover:text-gray-200 transition-all ${
                 isRefreshing ? "animate-spin" : ""
               }`}
               onClick={handleRefreshScore}
             />
           </div>
           <BsShare
-            className="text-2xl text-white cursor-pointer hover:text-gray-200 transition-colors"
+            className="text-xl md:text-2xl text-white cursor-pointer hover:text-gray-200 transition-colors"
             onClick={handleShareClick} // Add click handler
           />
           <div className="relative">
