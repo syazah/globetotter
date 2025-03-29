@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
-import { FaWhatsapp, FaUser, FaLock, FaTimes, FaSpinner } from "react-icons/fa";
+import { FaWhatsapp, FaUser, FaTimes, FaSpinner } from "react-icons/fa";
 import { useAuthContext } from "../../context/AuthContext";
 import { useToast } from "../../context/ToastContext";
 import html2canvas from "html2canvas";
@@ -27,6 +27,19 @@ interface InviteModalProps {
   currentClue?: string;
 }
 
+// Add this function after the interface declarations
+const generateSecurePassword = (): string => {
+  const length = 12;
+  const charset =
+    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
+  let password = "";
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * charset.length);
+    password += charset[randomIndex];
+  }
+  return password;
+};
+
 // Main InviteModal component
 const InviteModal: React.FC<InviteModalProps> = ({
   isOpen,
@@ -38,7 +51,7 @@ const InviteModal: React.FC<InviteModalProps> = ({
   const [step, setStep] = useState<number>(1);
   const [formData, setFormData] = useState<FormData>({
     username: "",
-    password: "",
+    password: generateSecurePassword(),
   });
   const [validation, setValidation] = useState<ValidationState>({
     isUsernameAvailable: false,
@@ -61,7 +74,7 @@ const InviteModal: React.FC<InviteModalProps> = ({
   // Close modal and reset state
   const handleClose = () => {
     setStep(1);
-    setFormData({ username: "", password: "" });
+    setFormData({ username: "", password: generateSecurePassword() });
     setValidation({
       isUsernameAvailable: false,
       isUsernameChecking: false,
@@ -104,8 +117,6 @@ const InviteModal: React.FC<InviteModalProps> = ({
       // Use the existing API endpoint to check username availability
       const response = await axios.get(`/api/user/username/${username}`);
 
-      // If success is true, the username is taken
-      // If success is false, the username is available
       const isAvailable = !response.data.success;
 
       setValidation({
@@ -149,8 +160,6 @@ const InviteModal: React.FC<InviteModalProps> = ({
     e.preventDefault();
 
     if (step === 1 && validation.isUsernameAvailable) {
-      setStep(2);
-    } else if (step === 2) {
       try {
         setIsCreating(true);
 
@@ -160,17 +169,14 @@ const InviteModal: React.FC<InviteModalProps> = ({
         );
 
         setFriendsToken(friendsToken);
-
-        setStep(3);
+        setStep(3); // Skip step 2, go directly to sharing
         setIsCreating(false);
 
-        // Show success toast notification
         showToast(
           `Account created successfully as ${formData.username}!`,
           "success"
         );
 
-        // Generate share image after a small delay
         setTimeout(() => {
           generateShareImage();
         }, 1500);
@@ -221,8 +227,26 @@ const InviteModal: React.FC<InviteModalProps> = ({
   const shareToWhatsApp = () => {
     const frontendURL = import.meta.env.VITE_FRONTEND_URL;
     if (!shareImage) return;
+    const link = document.createElement('a');
+    link.href = shareImage;
+    link.download = 'globetotter-challenge.png';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
 
-    const text = `🌍 *Globetotter Challenge!* 🌍\n\n${invitingUser?.username}, has challenged you to beat their score of ${score} points in Globetotter! Can you guess the destinations better?\n\n Your username: ${formData?.username} and Your Password: ${formData?.password} \n \nPlay now: ${frontendURL}/welcome/${friendsToken}`;
+    const text = `🌍 *GLOBETOTTER CHALLENGE!* 🌍
+
+👋 Hey there! *${invitingUser?.username}* has thrown down the gauntlet with a score of *${score} points* in Globetotter!
+
+🧩 Think you can beat it? Test your geography knowledge with cryptic clues about famous destinations around the world.
+
+📱 *YOUR LOGIN DETAILS:*
+Username: ${formData?.username}
+Password: ${formData?.password}
+
+🚀 Accept the challenge: ${frontendURL}/welcome/${friendsToken}
+
+🔍 Explore. Guess. Compete. How far will your knowledge take you?`;
 
     try {
       const shareUrl = `https://wa.me/?text=${encodeURIComponent(text)}`;
@@ -247,11 +271,7 @@ const InviteModal: React.FC<InviteModalProps> = ({
       >
         <div className="flex justify-between items-center p-4 border-b">
           <h2 className="text-xl font-bold text-gray-800">
-            {step === 1
-              ? "Create Username"
-              : step === 2
-              ? "Set Password"
-              : "Share Challenge"}
+            {step === 1 ? "Create Username" : "Share Challenge"}
           </h2>
           <button
             onClick={handleClose}
@@ -268,16 +288,7 @@ const InviteModal: React.FC<InviteModalProps> = ({
               onChange={handleChange}
               onSubmit={handleSubmit}
               validation={validation}
-            />
-          )}
-
-          {step === 2 && (
-            <PasswordForm
-              password={formData.password}
-              onChange={handleChange}
-              onSubmit={handleSubmit}
               isCreating={isCreating}
-              errorMessage={validation.errorMessage}
             />
           )}
 
@@ -303,7 +314,8 @@ const UsernameForm: React.FC<{
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onSubmit: (e: React.FormEvent) => void;
   validation: ValidationState;
-}> = ({ username, onChange, onSubmit, validation }) => {
+  isCreating: boolean;
+}> = ({ username, onChange, onSubmit, validation, isCreating }) => {
   return (
     <form onSubmit={onSubmit} className="space-y-4">
       <div className="space-y-2">
@@ -356,70 +368,14 @@ const UsernameForm: React.FC<{
         disabled={
           !validation.isUsernameAvailable ||
           validation.isUsernameChecking ||
-          username.length < 3
+          username.length < 3 ||
+          isCreating
         }
-        className={`w-full py-2 rounded-md font-medium transition-colors cursor-pointer ${
+        className={`w-full py-2 rounded-md font-medium transition-colors cursor-pointer flex justify-center items-center ${
           validation.isUsernameAvailable &&
           !validation.isUsernameChecking &&
-          username.length >= 3
-            ? "bg-primary text-white hover:bg-primary/90"
-            : "bg-gray-300 text-gray-500 cursor-not-allowed"
-        }`}
-      >
-        Continue
-      </button>
-    </form>
-  );
-};
-
-// Password Form Component
-const PasswordForm: React.FC<{
-  password: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onSubmit: (e: React.FormEvent) => void;
-  isCreating: boolean;
-  errorMessage: string;
-}> = ({ password, onChange, onSubmit, isCreating, errorMessage }) => {
-  return (
-    <form onSubmit={onSubmit} className="space-y-4">
-      <div className="space-y-2">
-        <label
-          htmlFor="password"
-          className="block text-sm font-medium text-gray-700"
-        >
-          Create a password for your friends account
-        </label>
-        <div className="relative">
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <FaLock className="text-gray-400" />
-          </div>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            value={password}
-            onChange={onChange}
-            className="pl-10 pr-10 py-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
-            placeholder="Password"
-            minLength={6}
-            required
-          />
-        </div>
-        {errorMessage && (
-          <p className="text-red-500 text-sm mt-1">{errorMessage}</p>
-        )}
-        {password.length > 0 && password.length < 6 && (
-          <p className="text-yellow-500 text-sm mt-1">
-            Password must be at least 6 characters
-          </p>
-        )}
-      </div>
-
-      <button
-        type="submit"
-        disabled={isCreating || password.length < 6}
-        className={`w-full py-2 rounded-md font-medium transition-colors flex justify-center items-center ${
-          password.length >= 6 && !isCreating
+          username.length >= 3 &&
+          !isCreating
             ? "bg-primary text-white hover:bg-primary/90"
             : "bg-gray-300 text-gray-500 cursor-not-allowed"
         }`}

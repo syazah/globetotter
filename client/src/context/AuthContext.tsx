@@ -100,6 +100,7 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
       const res = await axios.post("/api/user/signup", { username, password });
       if (res.data.success) {
         showToast("Friend added", "success");
+        console.log(res.data.token);
         return res.data.token;
       } else {
         showToast(res.data.error, "error");
@@ -138,14 +139,15 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
           localStorage.removeItem("token");
           showToast(response.data.error, "error");
           delete axios.defaults.headers.common["Authorization"];
+          throw new Error("Invalid token");
         } else {
           setUser(response.data.user);
         }
       } catch (error) {
-        console.log(error);
         showToast("Failed to load user", "error");
         localStorage.removeItem("token");
         delete axios.defaults.headers.common["Authorization"];
+        throw error;
       }
     }
   }

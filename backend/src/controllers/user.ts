@@ -94,13 +94,14 @@ export const handleLoginUser = async (req: any, res: any) => {
 export const handleValidateUser = async (req: any, res: any) => {
   try {
     const token = req.headers.authorization?.split(" ")[1];
+    console.log(token);
     if (!token) {
       return res
         .status(StatusCodes.UNAUTHORIZED)
         .json({ success: false, error: "Unauthorized" });
     }
     const { id } = jwt.verify(token, process.env.JWT_SECRET as string);
-
+    console.log(id);
     if (!id) {
       return res
         .status(StatusCodes.UNAUTHORIZED)

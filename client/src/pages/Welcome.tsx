@@ -14,7 +14,6 @@ function Welcome() {
       if (token) {
         localStorage.setItem("token", token);
         axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-
         try {
           await validateAndLoadUser();
           // Add delay to show the score
@@ -34,7 +33,7 @@ function Welcome() {
   }, [token, navigate, validateAndLoadUser]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary to-primary/60 flex flex-col items-center justify-center p-4">
+    <div className="h-screen bg-gradient-to-br from-primary to-primary/60 flex flex-col items-center justify-center p-4">
       <Loading />
     </div>
   );
