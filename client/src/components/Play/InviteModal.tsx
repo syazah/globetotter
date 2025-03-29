@@ -358,7 +358,7 @@ const UsernameForm: React.FC<{
           validation.isUsernameChecking ||
           username.length < 3
         }
-        className={`w-full py-2 rounded-md font-medium transition-colors ${
+        className={`w-full py-2 rounded-md font-medium transition-colors cursor-pointer ${
           validation.isUsernameAvailable &&
           !validation.isUsernameChecking &&
           username.length >= 3
@@ -387,7 +387,7 @@ const PasswordForm: React.FC<{
           htmlFor="password"
           className="block text-sm font-medium text-gray-700"
         >
-          Create a password for your account
+          Create a password for your friends account
         </label>
         <div className="relative">
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -437,8 +437,6 @@ const PasswordForm: React.FC<{
   );
 };
 
-// Share Content Component
-// Share Content Component with simplified styling for html2canvas compatibility
 const ShareContent = React.forwardRef<
   HTMLDivElement,
   {

@@ -27,7 +27,11 @@ function Auth() {
   });
 
   async function handleCheckUsername() {
-    if (formData.username.length < 4) return;
+    if (formData.username.length < 4) {
+      showToast("Username must be at least 4 characters", "error");
+      setUsernameStatus("");
+      return;
+    }
 
     setUsernameStatus("checking");
     const startTime = Date.now();
@@ -48,7 +52,6 @@ function Auth() {
       setUsernameStatus("");
       showToast("Failed to check username", "error");
     } finally {
-      // Ensure spinner shows for at least 800ms
       const elapsed = Date.now() - startTime;
       const minDisplay = 800;
 
@@ -91,14 +94,24 @@ function Auth() {
     try {
       if (isLoginMode) {
         // Login logic
-        await loginWithCredentials(formData.username, formData.password);
-        showToast("Login successful!", "success");
-        navigate("/dashboard");
+        const loggedIn = await loginWithCredentials(
+          formData.username,
+          formData.password
+        );
+        if (loggedIn) {
+          showToast("Login successful!", "success");
+          navigate("/dashboard");
+        }
       } else {
         // Registration logic
-        await registerUser(formData.username, formData.password);
-        showToast("Account created successfully!", "success");
-        navigate("/dashboard");
+        const registered = await registerUser(
+          formData.username,
+          formData.password
+        );
+        if (registered) {
+          showToast("Account created successfully!", "success");
+          navigate("/dashboard");
+        }
       }
     } catch (error) {
       if (error instanceof AxiosError) {
@@ -115,7 +128,6 @@ function Auth() {
   };
 
   useEffect(() => {
-    console.log(user);
     if (user && user.id) {
       navigate("/play");
     } else {
@@ -130,7 +142,7 @@ function Auth() {
       } else {
         setUsernameStatus("");
       }
-    }, 800); // Reduced delay for better responsiveness
+    }, 800);
 
     return () => clearTimeout(timeout);
   }, [formData?.username]);
@@ -152,14 +164,14 @@ function Auth() {
           The world is full of wonders. Can you guess them all?
         </p>
         <form onSubmit={handleSubmit} className="md:w-1/2 flex flex-col">
-          <div className="relative w-full flex justify-center items-center">
+          <div className="relative w-full flex justify-center items-center  mt-6">
             <input
               value={formData.username}
               onChange={(e) =>
                 setFormData({ ...formData, username: e.target.value.trim() })
               }
               placeholder="Enter your username"
-              className={`w-full rounded-sm mt-6 p-2 border-[2px] ${
+              className={`w-full rounded-sm p-2 border-[2px] ${
                 errors.username
                   ? "border-red-500"
                   : usernameStatus === "available"
@@ -168,12 +180,12 @@ function Auth() {
               }`}
             />
             {usernameStatus === "checking" && (
-              <div className="absolute right-3 top-1/2 transform -translate-y-1/4">
+              <div className="absolute top-0 right-0 w-1/6 flex justify-center items-center h-full">
                 <div className="w-4 h-4 border-2 border-gray-300 border-t-primary rounded-full animate-spin"></div>
               </div>
             )}
             {usernameStatus === "available" && !isLoginMode && (
-              <div className="absolute right-3 top-[55%] transform -translate-y-1/4 text-green-500">
+              <div className=" absolute top-0 right-0 w-1/6 flex justify-center items-center h-full text-green-500">
                 <TiTick className="text-green-500" />
               </div>
             )}

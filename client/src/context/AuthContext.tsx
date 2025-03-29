@@ -7,6 +7,7 @@ import {
   useEffect,
 } from "react";
 import { useToast } from "./ToastContext";
+import { AxiosError } from "axios";
 
 export interface User {
   username: string;
@@ -17,8 +18,11 @@ export interface User {
 export interface AuthContextType {
   user: User | null;
   setUser: React.Dispatch<React.SetStateAction<User | null>>;
-  loginWithCredentials: (username: string, password: string) => Promise<void>;
-  registerUser: (username: string, password: string) => Promise<void>;
+  loginWithCredentials: (
+    username: string,
+    password: string
+  ) => Promise<boolean>;
+  registerUser: (username: string, password: string) => Promise<boolean>;
   logout: () => void;
   validateAndLoadUser: () => Promise<void>;
   registerFriend: (username: string, password: string) => Promise<string>;
@@ -43,12 +47,22 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
           "Authorization"
         ] = `Bearer ${res.data.token}`;
         localStorage.setItem("token", res.data.token);
+        return true;
       } else {
         showToast(res.data.error, "error");
+        return false;
       }
     } catch (error) {
-      console.log(error);
-      showToast("Failed to sign in", "error");
+      if (error instanceof AxiosError) {
+        if (error.response) {
+          showToast(error.response.data.error, "error");
+        } else {
+          showToast(error.message, "error");
+        }
+      } else {
+        showToast("Failed to sign in", "error");
+      }
+      return false;
     }
   }
   //SIGN UP USER
@@ -61,14 +75,26 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
         axios.defaults.headers.common[
           "Authorization"
         ] = `Bearer ${res.data.token}`;
+        return true;
       } else {
         showToast(res.data.error, "error");
+        return false;
       }
     } catch (error) {
-      console.log(error);
-      showToast("Failed to sign up", "error");
+      if (error instanceof AxiosError) {
+        if (error.response) {
+          showToast(error.response.data.error, "error");
+        } else {
+          showToast(error.message, "error");
+        }
+      } else {
+        showToast("Failed to sign in", "error");
+      }
+      return false;
     }
   }
+
+  //REGISTER A FRIEND
   async function registerFriend(username: string, password: string) {
     try {
       const res = await axios.post("/api/user/signup", { username, password });
@@ -79,10 +105,19 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
         showToast(res.data.error, "error");
       }
     } catch (error) {
-      console.log(error);
-      showToast("Failed to sign up", "error");
+      if (error instanceof AxiosError) {
+        if (error.response) {
+          showToast(error.response.data.error, "error");
+        } else {
+          showToast(error.message, "error");
+        }
+      } else {
+        showToast("Failed to sign in", "error");
+      }
+      return false;
     }
   }
+
   // LOGOUT USER
   function logout() {
     setUser(null);

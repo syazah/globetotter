@@ -18,7 +18,7 @@ function Home() {
               alt="logo"
               className="w-8 h-8 brightness-0 invert  object-contain"
             />
-            <h1 className="text-2xl text-background font-semibold ml-2">
+            <h1 className="text-2xl text-background font-semibold ml-2 hover:text-zinc-300 cursor-pointer">
               Globetotter
             </h1>
           </div>
@@ -28,7 +28,7 @@ function Home() {
             </h1>
             <Link
               to="/signin"
-              className="w-1/2 rounded-lg bg-background p-2 text-dark shadow-2xl border-[1px] border-dark flex justify-center items-center hover:bg-zinc-200 cursor-pointer gap-2"
+              className="w-1/2 rounded-lg bg-background p-2 text-dark shadow-2xl border-[1px] border-dark flex justify-center items-center  cursor-pointer hover:bg-primary transition-all duration-500 hover:text-white gap-2"
             >
               <h1 className="text-lg"> Get started</h1>
             </Link>

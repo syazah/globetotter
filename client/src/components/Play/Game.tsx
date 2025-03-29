@@ -79,7 +79,6 @@ const Game: React.FC = () => {
     setAnswering(true);
 
     try {
-      // Split the selected option into city and country
       const [city, country] = selectedOption.split(", ");
 
       const response = await axios.post("/api/game/play", {
@@ -98,7 +97,7 @@ const Game: React.FC = () => {
       } else {
         // Incorrect answer
         setIncorrectAnswers((prev) => prev + 1);
-        showCryingEmojis(); // Add this line to show crying emojis
+        showCryingEmojis();
       }
 
       setShowFeedback(true);
@@ -155,9 +154,7 @@ const Game: React.FC = () => {
     }
   };
 
-  // Add animation keyframes to the document
   useEffect(() => {
-    // Create style element for the animation
     const styleElement = document.createElement("style");
     styleElement.textContent = `
       @keyframes fall-emoji {
@@ -193,8 +190,8 @@ const Game: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+      <div className="flex w-full h-full justify-center items-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-background"></div>
       </div>
     );
   }
