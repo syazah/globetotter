@@ -9,6 +9,8 @@ router.use("/admin", adminRoutes);
 
 //                              GAME
 router.use("/game", getUserAuth, gameRoutes);
+
+//                HISTORY
 //                              USER
 router.use("/user", userRoutes);
 //                              HEALTH CHECK

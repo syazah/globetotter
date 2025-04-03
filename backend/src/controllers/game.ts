@@ -4,7 +4,9 @@ import { NotFound } from "@errors/allErrors";
 import { StatusCodes } from "http-status-codes";
 import GameHashmap from "@helpers/gameMap";
 import UserDB from "@db/user";
+import { HistoryMap } from "@helpers/historyMap";
 const gameMap = GameHashmap.getInstance();
+const historyMapInstance = HistoryMap.getInstance();
 export const handleGetCountries = async (req: any, res: any) => {
   try {
     const countries = await GameDB.getCountries();
@@ -91,6 +93,13 @@ export const handleGetAnswer = async (req: any, res: any) => {
     }
     await UserDB.updateUserScore(user._id, answer.score);
     await gameMap.setPlayed(user._id, answer.clueId);
+
+    const historyData = {
+      currentSessionQuiz: { clues: infos.clues, answer },
+    };
+
+    console.log(HistoryMap.getUserSession(user.username));
+    await HistoryMap.storeGameData(historyData, user.username);
     if (infos.city === answer.city) {
       return res.status(StatusCodes.OK).json({
         success: true,

@@ -3,7 +3,8 @@ import { User } from "@schemas/user";
 import { StatusCodes } from "http-status-codes";
 import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
-
+import { HistoryMap } from "@helpers/historyMap";
+const HistoryMapInstance = HistoryMap.getInstance();
 export const handleCheckUsername = async (req: any, res: any) => {
   try {
     const username = req.params.username;
@@ -74,6 +75,10 @@ export const handleLoginUser = async (req: any, res: any) => {
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET as string, {
       expiresIn: "24h",
     });
+    if (HistoryMap.getUserSession(username)) {
+      await HistoryMap.storeUserAttempts(username);
+    }
+    HistoryMap.addUserSession(username, Date.now());
 
     return res.status(StatusCodes.OK).json({
       success: true,
