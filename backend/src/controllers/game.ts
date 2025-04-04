@@ -6,7 +6,7 @@ import GameHashmap from "@helpers/gameMap";
 import UserDB from "@db/user";
 import { HistoryMap } from "@helpers/historyMap";
 const gameMap = GameHashmap.getInstance();
-const historyMapInstance = HistoryMap.getInstance();
+
 export const handleGetCountries = async (req: any, res: any) => {
   try {
     const countries = await GameDB.getCountries();
@@ -97,8 +97,9 @@ export const handleGetAnswer = async (req: any, res: any) => {
     const historyData = {
       currentSessionQuiz: { clues: infos.clues, answer },
     };
-
-    console.log(HistoryMap.getUserSession(user.username));
+    if(!HistoryMap.getUserSession(user.username)){
+      HistoryMap.addUserSession(user.username, Date.now());
+    }
     await HistoryMap.storeGameData(historyData, user.username);
     if (infos.city === answer.city) {
       return res.status(StatusCodes.OK).json({

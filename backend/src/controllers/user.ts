@@ -75,6 +75,7 @@ export const handleLoginUser = async (req: any, res: any) => {
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET as string, {
       expiresIn: "24h",
     });
+    console.log(username);
     if (HistoryMap.getUserSession(username)) {
       await HistoryMap.storeUserAttempts(username);
     }
@@ -126,6 +127,29 @@ export const handleValidateUser = async (req: any, res: any) => {
         username: user.username,
         score: user.maxScore,
       },
+    });
+  } catch (error) {
+    return res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ success: false, error: error.message });
+  }
+};
+
+export const handleGetUserHistory = async (req: any, res: any) => {
+  try {
+    const user = req.user;
+
+    if (!user) {
+      return res
+        .status(StatusCodes.UNAUTHORIZED)
+        .json({ success: false, error: "User not authenticated" });
+    }
+
+    const history = await HistoryMap.getUserHistory(user._id);
+
+    return res.status(StatusCodes.OK).json({
+      success: true,
+      data: history,
     });
   } catch (error) {
     return res

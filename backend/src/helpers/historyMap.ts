@@ -25,20 +25,30 @@ export class HistoryMap {
   //store user game data in the session
   public static addUserSession(username, timestamp) {
     const sessionId = username;
-    this.map.set(sessionId, { timestamp });
+    this.map.set(sessionId, {
+      timestamp,
+      score: 0,
+      sessionQuizHistory: [],
+      attemptedQuestions: 0,
+    });
   }
 
   public static getUserSession(username) {
-    if (this.map.has(username)) return username;
+    if (this.map.has(username)) return this.map.get(username);
+    return null;
   }
 
   public static storeGameData(data, username) {
+    if (!this.map.has(username)) {
+      this.addUserSession(username, Date.now());
+    }
+
     const prevData = this.map.get(username);
-    console.log(this.map);
     const newData = {
+      ...prevData,
       score: (prevData.score || 0) + 1,
       sessionQuizHistory: [
-        ...prevData.sessionQuizHistory,
+        ...(prevData.sessionQuizHistory || []),
         data.currentSessionQuiz,
       ],
       attemptedQuestions: (prevData.attemptedQuestions || 0) + 1,
@@ -54,11 +64,25 @@ export class HistoryMap {
       const quizAttempt = await QuizAttempts.create({
         user: userData._id,
         session: attemptsData.timestamp,
-        score: attemptsData?.score,
-        attemptedQuestions: attemptsData?.attemptedQuestions,
-        sessionQuizHistory: attemptsData?.sessionQuizHistory,
+        score: attemptsData?.score || 0,
+        attemptedQuestions: attemptsData?.attemptedQuestions || 0,
+        sessionQuizHistory: attemptsData?.sessionQuizHistory || [],
       });
       await quizAttempt.save();
+      return quizAttempt;
+    }
+    return null;
+  }
+
+  public static async getUserHistory(userId) {
+    try {
+      const userAttempts = await QuizAttempts.find({ user: userId }).sort({
+        createdAt: -1,
+      });
+      return userAttempts;
+    } catch (error) {
+      console.error("Error fetching user history:", error);
+      return [];
     }
   }
 }

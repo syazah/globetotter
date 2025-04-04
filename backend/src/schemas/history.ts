@@ -25,12 +25,15 @@ const QuizAttemptsSchema = new mongoose.Schema(
     },
     score: {
       type: Number,
+      default: 0,
     },
     attemptedQuestions: {
       type: Number,
+      default: 0,
     },
     sessionQuizHistory: {
-      type: mongoose.Schema.Types.Map,
+      type: [Object],
+      default: [],
     },
   },
   {

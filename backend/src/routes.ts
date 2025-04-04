@@ -10,9 +10,9 @@ router.use("/admin", adminRoutes);
 //                              GAME
 router.use("/game", getUserAuth, gameRoutes);
 
-//                HISTORY
-//                              USER
+//                              USER & HISTORY
 router.use("/user", userRoutes);
+
 //                              HEALTH CHECK
 router.get("/health", (req, res) => {
   res.status(200).json({
