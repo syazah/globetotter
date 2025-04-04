@@ -30,21 +30,6 @@
     "ts-node": "^10.9.2",
     "ws": "^8.18.1"
   },
-  "_moduleAliases": {
-    "@routes": "dist/routes",
-    "@controllers": "dist/controllers",
-    "@interfaces": "dist/interfaces",
-    "@middlewares": "dist/middlewares",
-    "@schemas": "dist/schemas",
-    "@db": "dist/db",
-    "@errors": "dist/errors",
-    "@hashmaps": "dist/hashmaps",
-    "@helpers": "dist/helpers",
-    "@managers": "dist/managers",
-    "@services": "dist/services",
-    "@utils": "dist/utils",
-    "@validations": "dist/validations"
-  },
   "devDependencies": {
     "nodemon": "^3.1.9",
     "tsconfig-paths": "^4.2.0"
