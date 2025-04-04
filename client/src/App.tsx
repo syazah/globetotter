@@ -26,10 +26,7 @@ function App() {
           <Route path="/signin" element={<Auth />} />
 
           <Route path="/play" element={user ? <Play /> : <NotFound />} />
-          <Route
-            path="/welcome/:token"
-            element={user ? <Welcome /> : <NotFound />}
-          />
+          <Route path="/welcome/:token" element={<Welcome />} />
         </Routes>
       </BrowserRouter>
     </Suspense>
